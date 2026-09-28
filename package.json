@@ -1,0 +1,22 @@
+{
+  "name": "tunnel-daddy",
+  "version": "1.0.0",
+  "description": "Shared, self-healing cloudflared TCP tunnels for Node services. Multiple projects adopt one tunnel; the last one out closes it.",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "lib/index.js",
+  "bin": {
+    "tunnel-daddy": "bin/tunnel-daddy.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
