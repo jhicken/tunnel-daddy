@@ -15,7 +15,9 @@ cloudflared access tcp --hostname mongo.example.com --url localhost:37017
 - **Self-healing** — if `cloudflared` crashes or is killed, the next heartbeat respawns it, so the tunnel reconnects for as long as consumers are alive.
 - **Multiple tunnels** — configure as many as you need (MongoDB, MySQL, …); each is tracked independently.
 
-Zero dependencies. Requires the `cloudflared` binary on `PATH` (or point `cloudflaredPath` / `TUNNEL_DADDY_CLOUDFLARED` at it).
+The `cloudflared` binary ships with the package (via the [`cloudflared`](https://www.npmjs.com/package/cloudflared) npm dependency, which bundles prebuilt binaries per platform) — nothing needs to be installed globally or on `PATH`.
+
+Binary resolution order: `cloudflaredPath` option → `TUNNEL_DADDY_CLOUDFLARED` env var → bundled npm binary → `cloudflared` on `PATH`.
 
 ## Install
 
@@ -24,7 +26,7 @@ Directly from this repository:
 ```sh
 npm install github:jhicken/tunnel-daddy
 # or a specific ref
-npm install github:jhicken/tunnel-daddy#v1.0.0
+npm install github:jhicken/tunnel-daddy#v1.1.0
 ```
 
 (Local development: `npm install ../tunnel-daddy`.)
@@ -76,7 +78,7 @@ await startTunnels({
 | --- | --- | --- |
 | `tunnels` | — | Inline tunnel config; skips config-file lookup |
 | `cwd` | `process.cwd()` | Directory to search for a config file |
-| `cloudflaredPath` | `cloudflared` | Path to the binary (env: `TUNNEL_DADDY_CLOUDFLARED`) |
+| `cloudflaredPath` | bundled binary | Path to the binary (env: `TUNNEL_DADDY_CLOUDFLARED`) |
 | `heartbeatMs` | `5000` | Health-check / reconnect interval |
 | `readyTimeoutMs` | `15000` | How long to wait for the local port to accept connections (`0` to skip) |
 | `stateDir` | `~/.tunnel-daddy` | Shared coordination directory (env: `TUNNEL_DADDY_HOME`) |

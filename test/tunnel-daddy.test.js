@@ -194,6 +194,24 @@ test('two separate processes share one tunnel; last one out tears it down', { ti
   assert.ok(!(await portOpen(TUNNEL.url)));
 });
 
+test('resolves the bundled cloudflared binary by default', () => {
+  const { resolveCloudflaredPath, Tunnel } = require('../lib/tunnel');
+  const bundled = require('cloudflared').bin;
+
+  const saved = process.env.TUNNEL_DADDY_CLOUDFLARED;
+  delete process.env.TUNNEL_DADDY_CLOUDFLARED;
+  try {
+    assert.equal(resolveCloudflaredPath(), bundled);
+    assert.equal(new Tunnel(TUNNEL, { stateDir }).cloudflaredPath, bundled);
+    assert.equal(resolveCloudflaredPath('/custom/cloudflared'), '/custom/cloudflared');
+    process.env.TUNNEL_DADDY_CLOUDFLARED = '/env/cloudflared';
+    assert.equal(resolveCloudflaredPath(), '/env/cloudflared');
+  } finally {
+    if (saved === undefined) delete process.env.TUNNEL_DADDY_CLOUDFLARED;
+    else process.env.TUNNEL_DADDY_CLOUDFLARED = saved;
+  }
+});
+
 test('supports multiple tunnels in one project', async () => {
   const mysql = { name: 'mysql', hostname: 'mysql.example.com', url: '127.0.0.1:43306' };
   const handle = await startTunnels(options({ tunnels: [TUNNEL, mysql] }));
